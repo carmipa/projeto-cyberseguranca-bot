@@ -272,6 +272,25 @@ This bot implements **Active Defense** mechanisms based on Honeypot concepts.
     - If executed by anyone other than `OWNER_ID` (in `.env`), access is denied and logged as "Intrusion".
     - Response message: *"O malandro se acha malandro até achar um malandro melhor."*
 
+## 🌐 Threat Intelligence Integration (APIs)
+
+The bot is architected to connect with major intelligence sources:
+
+1. **NIST NVD**: Real-time monitoring of critical CVEs.
+2. **URLScan.io**: (Future) Forensic analysis of suspicious URLs.
+3. **VirusTotal**: (Future) Reputation check for files/links.
+4. **AlienVault OTX**: (Future) Community threat feed.
+
+### Configuration (.env)
+
+Add your keys to enable advanced features:
+
+```env
+NVD_API_KEY=your_key_here
+URLSCAN_API_KEY=your_key_here
+VT_API_KEY=your_key_here
+```
+
 ### 🚔 Compliance
 
 This mechanism serves as a simplified **IDS (Intrusion Detection System)**, aligned with continuous security monitoring practices.

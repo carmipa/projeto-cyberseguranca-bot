@@ -2,14 +2,20 @@ import discord
 import urllib.parse
 
 class ShareButtons(discord.ui.View):
-    def __init__(self, news_title: str, news_url: str):
+    def __init__(self, news_title: str, news_url: str, is_critical: bool = False):
         super().__init__()
         
         # Garante que o texto esteja seguro para URL
         safe_title = urllib.parse.quote(news_title)
         safe_url = urllib.parse.quote(news_url)
-        safe_text = f"🚨 *Alerta CyberIntel*\n\n{safe_title}\n🔗 {safe_url}"
-        safe_text_encoded = urllib.parse.quote(safe_text)
+        
+        if is_critical:
+            # Mensagem Personalizada de Emergência
+            base_text = f"🚨 *ALERTA URGENTE detectado no SOC do Paulo!* 🚨\n\n{news_title}\n🔗 {news_url}"
+        else:
+            base_text = f"🚨 *Alerta CyberIntel*\n\n{news_title}\n🔗 {news_url}"
+            
+        safe_text_encoded = urllib.parse.quote(base_text)
         
         # WhatsApp Button
         self.add_item(discord.ui.Button(

@@ -272,6 +272,25 @@ Este bot implementa mecanismos de **Active Defense** baseados no conceito de Hon
     - Se executado por alguém que não seja o `OWNER_ID` (configurado no `.env`), o bot nega acesso e registra o log de "Intrusão".
     - Mensagem de resposta: *"O malandro se acha malandro até achar um malandro melhor."*
 
+## 🌐 Integração Threat Intelligence (APIs)
+
+O bot foi arquitetado para se conectar com as principais fontes de inteligência:
+
+1. **NIST NVD**: Monitoramento de CVEs críticas em tempo real.
+2. **URLScan.io**: (Futuro) Análise forense de URLs suspeitas.
+3. **VirusTotal**: (Futuro) Checagem de reputação de arquivos/links.
+4. **AlienVault OTX**: (Futuro) Feed de ameaças comunitário.
+
+### Configuração (.env)
+
+Adicione suas chaves para habilitar os recursos avançados:
+
+```env
+NVD_API_KEY=sua_chave_aqui
+URLSCAN_API_KEY=sua_chave_aqui
+VT_API_KEY=sua_chave_aqui
+```
+
 ### 🚔 Conformidade
 
 Este mecanismo serve como um **IDS (Intrusion Detection System)** simplificado, alinhado com práticas de monitoramento contínuo de segurança.

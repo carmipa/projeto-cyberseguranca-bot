@@ -7,6 +7,8 @@ log = logging.getLogger("CyberIntel")
 
 NVD_API_URL = "https://services.nvd.nist.gov/rest/json/cves/2.0"
 
+from settings import NVD_API_KEY
+
 async def fetch_nvd_cves(limit: int = 5) -> List[Dict[str, Any]]:
     """
     Busca as últimas CVEs críticas/altas na API do NIST.
@@ -32,8 +34,11 @@ async def fetch_nvd_cves(limit: int = 5) -> List[Dict[str, Any]]:
 
     headers = {
         "User-Agent": "CyberIntelBot/1.0 (students_project)"
-        # "apiKey": "SEU_API_KEY" # Opcional para limites maiores, mas funciona sem para low volume
     }
+    
+    # Adiciona API Key se configurada (aumenta rate limit)
+    if NVD_API_KEY:
+        headers["apiKey"] = NVD_API_KEY
 
     try:
         async with aiohttp.ClientSession() as session:

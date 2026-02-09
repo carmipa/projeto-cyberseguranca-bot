@@ -27,6 +27,7 @@ from core.filters import match_intel
 from core.html_monitor import check_official_sites
 from core.html_monitor import check_official_sites
 from src.services.cveService import fetch_nvd_cves
+from src.services.threatService import ThreatService
 from bot.views.share_buttons import ShareButtons
 
 log = logging.getLogger("CyberIntel")
@@ -299,7 +300,27 @@ async def run_scan_once(bot: discord.Client, trigger: str = "manual") -> None:
             except Exception as e:
                 log.error(f"❌ Falha ao buscar CVEs: {e}")
 
-            # 3. Process All Results
+            # 3. Fetch OTX Pulses
+            try:
+                otx_pulses = await ThreatService.get_otx_pulses()
+                if otx_pulses:
+                    log.info(f"🛸 Encontrados {len(otx_pulses)} pulses do AlienVault OTX.")
+                    # Formata para o padrão de entrada
+                    formatted_pulses = []
+                    for p_item in otx_pulses:
+                        p_id = p_item.get("id")
+                        formatted_pulses.append({
+                            "title": f"🚨 OTX: {p_item.get('name', 'Unknown Threat')}",
+                            "link": f"https://otx.alienvault.com/pulse/{p_id}",
+                            "summary": f"**Threat:** {p_item.get('threat_hunter_scanner', 'Unknown')}\n\n{p_item.get('description', 'Sem descrição.')[:500]}...",
+                            "source": "AlienVault OTX",
+                            "published": p_item.get("created")
+                        })
+                    results.append(("api://otx", formatted_pulses))
+            except Exception as e:
+                log.error(f"❌ Falha ao buscar OTX Pulses: {e}")
+
+            # 4. Process All Results
             for result in results:
                 if result is None:
                     continue
@@ -441,7 +462,7 @@ async def run_scan_once(bot: discord.Client, trigger: str = "manual") -> None:
                                 embed.set_thumbnail(url=thumb_url)
 
                             # View com botões de compartilhamento
-                            view = ShareButtons(t_translated[:100], link)
+                            view = ShareButtons(t_translated[:100], link, is_critical=is_critical)
 
                             is_media = any(d in link for d in media_domains)
                             if is_media:

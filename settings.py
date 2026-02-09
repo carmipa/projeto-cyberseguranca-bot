@@ -20,4 +20,11 @@ except ValueError:
 LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO").upper()
 
 # Node-RED Integration
+# Node-RED Integration
 NODE_RED_ENDPOINT = os.getenv("NODE_RED_ENDPOINT", "http://localhost:1880/cyber-intel")
+
+# Threat Intel APIs
+NVD_API_KEY = os.getenv("NVD_API_KEY", "")
+URLSCAN_API_KEY = os.getenv("URLSCAN_API_KEY", "")
+OTX_API_KEY = os.getenv("OTX_API_KEY", "")
+VT_API_KEY = os.getenv("VT_API_KEY", "")

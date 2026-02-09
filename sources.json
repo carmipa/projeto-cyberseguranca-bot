@@ -43,10 +43,28 @@
   ],
   "apis": [
     {
-      "name": "NVD NIST",
-      "endpoint": "https://services.nvd.nist.gov/rest/json/cves/2.0",
-      "type": "CVE",
-      "priority": "Critical"
+      "name": "NVD_NIST",
+      "url": "https://services.nvd.nist.gov/rest/json/cves/2.0",
+      "auth_type": "apiKey",
+      "description": "Monitoramento de vulnerabilidades críticas (CVSS > 7.0) e recentes."
+    },
+    {
+      "name": "URLScan",
+      "url": "https://urlscan.io/api/v1/",
+      "auth_type": "apiKey",
+      "description": "Análise de segurança de links e screenshots."
+    },
+    {
+      "name": "AlienVault OTX",
+      "url": "https://otx.alienvault.com/api/v1/pulses/subscribed",
+      "auth_type": "apiKey",
+      "description": "Pulses e campanhas de ameaças ativas."
+    },
+    {
+      "name": "VirusTotal",
+      "url": "https://www.virustotal.com/api/v3/",
+      "auth_type": "apiKey",
+      "description": "Reputação de arquivos e URLs."
     }
   ],
   "youtube_feeds": [
