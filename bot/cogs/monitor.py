@@ -8,6 +8,13 @@ from src.services.dbService import is_news_sent, mark_news_as_sent
 log = logging.getLogger("CyberIntel")
 
 class Monitor(commands.Cog):
+    """
+    Cog responsável pelo monitoramento contínuo de ameaças.
+    
+    Executa um loop independente do scanner principal para buscar alertas
+    críticos de fontes de alta prioridade (via newsService).
+    Os alertas são enviados para o canal configurado em DISCORD_NEWS_CHANNEL_ID.
+    """
     def __init__(self, bot):
         self.bot = bot
         self.channel_id = int(os.getenv('DISCORD_NEWS_CHANNEL_ID', 0))

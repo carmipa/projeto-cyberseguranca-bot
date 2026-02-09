@@ -1,6 +1,10 @@
 # =========================================================
 # CyberIntel Bot - "NetRunner" v1.0
 # main.py (Modularized)
+#
+# Ponto de entrada da aplicação. Gerencia o ciclo de vida do bot,
+# carregamento de cogs, inicialização de serviços (Web, DB) e
+# logs do sistema.
 # =========================================================
 
 import logging

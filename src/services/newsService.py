@@ -2,6 +2,15 @@
 import feedparser
 
 def get_latest_security_news():
+    """
+    Busca as últimas notícias de segurança de fontes confiáveis.
+    
+    Esta função é usada pelo monitor de ameaças (Monitor Cog) para
+    gerar alertas rápidos, independentes do ciclo principal do scanner.
+    
+    Returns:
+        List[Dict]: Lista de dicionários contendo title, link e summary.
+    """
     # Feeds confiáveis
     feeds = [
         "https://feeds.feedburner.com/TheHackersNews",

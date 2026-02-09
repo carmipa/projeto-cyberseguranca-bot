@@ -59,8 +59,16 @@ def _contains_any(text: str, keywords: List[str]) -> bool:
     """
     Verifica se alguma keyword está presente no texto usando Regex.
     
-    Usa word boundaries (\b) para evitar matches parciais.
-    Suporta plural opcional ('s?').
+    A verificação é feita com "word boundaries" (\\b) para evitar falsos positivos
+    em substrings (ex: 'bot' em 'bottle').
+    Suporta pluralização simples opcional ('s?').
+    
+    Args:
+        text (str): Texto a ser analisado.
+        keywords (List[str]): Lista de palavras-chave.
+        
+    Returns:
+        bool: True se encontrar pelo menos uma correspondência.
     """
     if not keywords:
         return False
@@ -70,7 +78,7 @@ def _contains_any(text: str, keywords: List[str]) -> bool:
     escaped_kws = [re.escape(k) for k in keywords]
     pattern_str = r'(?<!:)\b(?:' + '|'.join(escaped_kws) + r')s?\b'
     
-    return bool(re.search(pattern_str, text))
+    return bool(re.search(pattern_str, text, re.IGNORECASE))
 
 
 def match_intel(guild_id: str, title: str, summary: str, config: Dict[str, Any]) -> bool:

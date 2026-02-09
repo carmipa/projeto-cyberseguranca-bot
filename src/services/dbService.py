@@ -7,7 +7,10 @@ DB_PATH = "data/database.json"
 NODE_RED_ENDPOINT = os.getenv("NODE_RED_ENDPOINT", "http://nodered:1880/cyber-intel")
 
 def init_db():
-    """Inicializa o arquivo JSON se não existir"""
+    """
+    Inicializa o arquivo JSON de banco de dados se não existir.
+    Cria a estrutura básica com 'sent_news' e 'stats'.
+    """
     if not os.path.exists("data"):
         os.makedirs("data", exist_ok=True)
     
@@ -36,6 +39,15 @@ def save_db(data):
         print(f"Erro ao salvar DB: {e}")
 
 def is_news_sent(link):
+    """
+    Verifica se um link já foi enviado anteriormente.
+    
+    Args:
+        link (str): URL da notícia.
+        
+    Returns:
+        bool: True se já estiver no banco, False caso contrário.
+    """
     db = load_db()
     # Verifica se o link está na lista de enviados
     # Otimização: para muitos dados, usar set seria melhor, mas para JSON simples list comprehension serve
@@ -50,6 +62,13 @@ def notify_nodered(item):
         print(f"Erro ao comunicar com Node-RED: {e}")
 
 def mark_news_as_sent(link, title="Sem Título"):
+    """
+    Registra uma notícia como enviada no banco de dados e notifica o Node-RED via webhook.
+    
+    Args:
+        link (str): URL da notícia.
+        title (str): Título da notícia.
+    """
     db = load_db()
     
     # Verifica duplicidade antes de adicionar

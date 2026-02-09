@@ -166,13 +166,20 @@ def _log_next_run() -> None:
 
 async def run_scan_once(bot: discord.Client, trigger: str = "manual") -> None:
     """
-    Executa UMA varredura completa.
+    Executa um ciclo completo de varredura de inteligência.
     
-    Args:
-        bot: Instância do bot Discord
-        trigger: Quem disparou ("loop", "dashboard", "manual")
-    """
+    Esta função é thread-safe (via asyncio.Lock) e gerencia todo o pipeline:
+    1. Carregamento de configuração e fontes.
+    2. Gerenciamento de estado e limpeza automática (Auto-Cleanup).
+    3. Busca concorrente de feeds RSS/Atom/YouTube via aiohttp.
+    4. Filtragem lógica (Keywords, Blacklist, Deduplicação).
+    5. Tradução automática e postagem no Discord.
+    6. Atualização de estatísticas e persistência em JSON.
 
+    Args:
+        bot (discord.Client): Instância do bot para envio de mensagens.
+        trigger (str): Identificador de quem iniciou a varredura ('loop', 'manual', 'command').
+    """
     if scan_lock.locked():
         log.info(f"⏭️ Varredura ignorada (já existe uma em execução). Trigger: {trigger}")
         return
