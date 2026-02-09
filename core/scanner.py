@@ -10,7 +10,7 @@ import certifi
 from datetime import datetime, timedelta, timezone
 from dateutil import parser as dtparser
 from typing import List, Set, Tuple, Dict, Any
-from urllib.parse import urlparse, urlunparse
+from urllib.parse import urlparse, urlunparse, parse_qsl, urlencode
 import time
 import os
 
@@ -459,13 +459,18 @@ async def run_scan_once(bot: discord.Client, trigger: str = "manual", bypass_cac
                             if thumb_url:
                                 embed.set_thumbnail(url=thumb_url)
 
+                            # Validação Robust de URL para Discord
+                            final_link = safe_discord_url(link)
+                            
                             # View com botões de compartilhamento
-                            view = ShareButtons(t_translated[:100], link, is_critical=is_critical)
+                            view = ShareButtons(t_translated[:100], final_link or link, is_critical=is_critical)
 
                             is_media = any(d in link for d in media_domains)
                             if is_media:
-                                await channel.send(content=f"📺 **{t_translated}**\n{link}", view=view)
+                                await channel.send(content=f"📺 **{t_translated}**\n{final_link or link}", view=view)
                             else:
+                                if not final_link:
+                                    embed.description = (embed.description or "") + f"\n\n🔗 **Link Original:** {link}"
                                 await channel.send(embed=embed, view=view)
 
                             posted_anywhere = True
