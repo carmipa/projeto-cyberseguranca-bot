@@ -173,8 +173,9 @@ async def main():
         await run_scan_once(bot, trigger)
 
     try:
-        # Carrega extensões normais (que têm setup(bot))
         await bot.load_extension("bot.cogs.info")
+        await bot.load_extension("bot.cogs.news")
+        await bot.load_extension("bot.cogs.cve")
         
         # Admin, Dashboard e Status precisam da função de scan injetada
         # Como load_extension não aceita args, importamos e setup manual 

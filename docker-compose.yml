@@ -1,24 +1,18 @@
 version: '3.8'
 
 services:
-  gundam-bot:
+  cyber-bot:
     build: .
-    container_name: gundam-news-bot
-    restart: unless-stopped
-
-    # Variáveis de ambiente (do arquivo .env)
-    env_file:
-      - .env
-
-    # Volumes para persistir dados
+    container_name: cyber_news_bot
+    restart: always
+    environment:
+      - DISCORD_TOKEN=${CYBER_BOT_TOKEN}
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
     volumes:
-      # Arquivos de configuração e histórico
+      - .:/app
       - ./config.json:/app/config.json
       - ./history.json:/app/history.json
       - ./state.json:/app/state.json
-      - ./sources.json:/app/sources.json
-
-      # Logs persistentes (opcional)
       - ./logs:/app/logs
 
     # Configuração de logs
