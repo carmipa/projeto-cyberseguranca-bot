@@ -1,45 +1,26 @@
-version: '3.8'
-
 services:
   cyber-bot:
     build: .
-    container_name: cyber_news_bot
+    container_name: cyber-intel-bot
     restart: always
     env_file:
       - .env
-    depends_on:
-      - nodered
-    environment:
-      - DISCORD_TOKEN=${CYBER_BOT_TOKEN}
-      - GEMINI_API_KEY=${GEMINI_API_KEY}
     volumes:
-      - .:/app
       - ./data:/app/data
-      - ./config.json:/app/config.json
-      - ./history.json:/app/history.json
-      - ./state.json:/app/state.json
-      - ./logs:/app/logs
+    networks:
+      - cyber-network
 
-    nodered:
-      image: nodered/node-red:latest
-      container_name: cyber_soc_nodered
-      restart: always
-      ports:
-        - "127.0.0.1:1880:1880"
-      volumes:
-        - ./node-red-data:/data
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
+  nodered:
+    image: nodered/node-red:latest
+    container_name: cyber-nodered
+    restart: always
+    ports:
+      - "1880:1880"
+    volumes:
+      - ./node-red-data:/data
+    networks:
+      - cyber-network
 
-    # Política de restart
-    # unless-stopped: reinicia sempre, exceto se parado manualmente
-
-    # Healthcheck (herda do Dockerfile)
-
-    # Labels para organização
-    labels:
-      com.gundam-bot.description: "Mafty Intelligence System"
-      com.gundam-bot.version: "2.1"
+networks:
+  cyber-network:
+    driver: bridge

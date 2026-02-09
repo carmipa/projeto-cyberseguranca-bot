@@ -11,14 +11,15 @@ log = logging.getLogger("MaftyIntel")
 
 def p(filename: str) -> str:
     """
-    Retorna o caminho absoluto para um arquivo no diretório raiz do bot.
-    
-    Args:
-        filename: Nome do arquivo (ex: 'config.json')
-    
-    Returns:
-        Caminho absoluto do arquivo
+    Retorna o caminho para um arquivo, garantindo que arquivos de dados (.json) 
+    fiqum na pasta 'data/' para persistência (Docker Volumes).
     """
+    if filename.endswith(".json") and not filename.startswith("data"):
+        data_dir = os.path.join(os.getcwd(), "data")
+        if not os.path.exists(data_dir):
+            os.makedirs(data_dir, exist_ok=True)
+        return os.path.join(data_dir, filename)
+        
     return os.path.abspath(filename)
 
 
