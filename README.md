@@ -3,6 +3,8 @@
 ![Bot Logo](icon.png)
 
 Bot de Discord focado em **Threat Intelligence**, notícias em tempo real e monitoramento de vulnerabilidades (CVEs).
+CLOG_LEVEL=INFO
+DISCORD_NEWS_CHANNEL_ID=123456789012345678
 Desenvolvido como parte dos estudos de Cybersecurity na **FIAP**.
 
 ## 🚀 Funcionalidades Atuais
