@@ -103,8 +103,46 @@ def load_sources() -> List[str]:
             out.append(u)
     return out
 
+TRACKING_KEYS = {
+    "utm_source","utm_medium","utm_campaign","utm_term","utm_content",
+    "utm_id","utm_name","utm_reader","utm_viz_id","utm_pubreferrer",
+    "gclid","fbclid","mc_cid","mc_eid","ref","ref_src","mkt_tok",
+}
 
+def safe_discord_url(raw: str) -> str | None:
+    """
+    Sanitiza e encurta URLs para evitar o limite de 512 caracteres do Discord.
+    """
+    if not raw:
+        return None
 
+    url = raw.strip()
+    if len(url) <= 512:
+        return url
+
+    try:
+        from urllib.parse import urlparse, urlunparse, parse_qsl, urlencode
+        p_url = urlparse(url)
+        # 1) Remove fragmento (#...)
+        p_url = p_url._replace(fragment="")
+
+        # 2) Remove parâmetros de rastreamento (UTM, etc)
+        q = [(k, v) for k, v in parse_qsl(p_url.query, keep_blank_values=True)
+             if k.lower() not in TRACKING_KEYS]
+        url_no_track = urlunparse((p_url.scheme, p_url.netloc, p_url.path, p_url.params, urlencode(q, doseq=True), ""))
+        
+        if len(url_no_track) <= 512:
+            return url_no_track
+
+        # 3) Remove toda a query string se ainda estiver grande
+        url_no_query = urlunparse((p_url.scheme, p_url.netloc, p_url.path, p_url.params, "", ""))
+        if len(url_no_query) <= 512:
+            return url_no_query
+
+        # 4) Fallback: Truncamento bruto
+        return url_no_query[:512]
+    except:
+        return url[:512]
 
 def sanitize_link(link: str) -> str:
     """
