@@ -245,6 +245,44 @@ This project is licensed under the **MIT License**. See the LICENSE file for det
 
 ---
 
+## 🔒 Security & Hardening (VPS)
+
+To run this bot on a public VPS, additional security measures have been applied in `docker-compose.yml`. The Node-RED dashboard is **not exposed to the internet**; it listens only on `127.0.0.1`.
+
+### Accessing the Dashboard via SSH Tunnel
+
+To view the dashboard on your local machine, you must create a secure tunnel:
+
+1. **On your PC (Terminal/PowerShell):**
+
+    ```bash
+    ssh -L 1880:127.0.0.1:1880 user@your-vps-ip
+    ```
+
+2.- **Start the Dashboard**: Access `http://localhost:1880/ui` (via SSH Tunnel).
+
+## 🛡️ Active Defense & GRC
+
+This bot implements **Active Defense** mechanisms based on Honeypot concepts.
+
+### 🍯 "Malandro Filter" System
+
+Any attempt to access non-existent administrative routes (e.g., `/admin`, `/.env`, `/wp-login.php`) is intercepted.
+
+- **Action**: Source IP is logged as "INTRUSION DETECTED".
+- **Response**: 403 Forbidden Error with the message: *"O malandro se acha malandro até achar um malandro melhor."* (Don't try to outsmart the smart).
+- **Goal**: Identify automated scans and block malicious actors before they find real vectors.
+
+### 🚔 Compliance
+
+This mechanism serves as a simplified **IDS (Intrusion Detection System)**, aligned with continuous security monitoring practices.
+3. **In Discord:**
+    Use the `/dashboard` command. The bot will verify internal health and provide the link.
+
+This practice ensures that only you, with authenticated SSH access, can view sensitive SOC data.
+
+---
+
 <p align="center">
   🔐 <i>CyberIntel System — Secure the network. Secure the future.</i>
 </p>

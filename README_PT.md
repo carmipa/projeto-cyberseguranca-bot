@@ -245,6 +245,43 @@ Este projeto está licenciado sob a **MIT License**. Consulte o arquivo LICENSE 
 
 ---
 
+## 🔒 Segurança & Hardening (VPS)
+
+Para rodar este bot em um servidor VPS público, medidas de segurança adicionais foram aplicadas no `docker-compose.yml`. O painel Node-RED **não é exposto para a internet**; ele escuta apenas em `127.0.0.1`.
+
+### Acessando o Dashboard via Túnel SSH
+
+Para visualizar o painel no seu computador local, você deve criar um túnel seguro:
+
+1. **No seu PC (Terminal/PowerShell):**
+
+    ```bash
+    ssh -L 1880:127.0.0.1:1880 usuario@ip-da-sua-vps
+    ```
+
+2.- **Start the Dashboard**: Access `http://localhost:1880/ui` (via SSH Tunnel).
+
+## 🛡️ Defesa Ativa & GRC (Gestão de Risco)
+
+Este bot implementa mecanismos de **Active Defense** baseados no conceito de Honeypot.
+
+### 🍯 Sistema "Malandro Filter" (Web & Discord)
+
+1. **Web**: Rotas como `/admin` e `/.env` retornam 403 e logan o IP.
+2. **Discord**: O comando `/admin_panel` é um **Honeypot**.
+    - Se executado por alguém que não seja o `OWNER_ID` (configurado no `.env`), o bot nega acesso e registra o log de "Intrusão".
+    - Mensagem de resposta: *"O malandro se acha malandro até achar um malandro melhor."*
+
+### 🚔 Conformidade
+
+Este mecanismo serve como um **IDS (Intrusion Detection System)** simplificado, alinhado com práticas de monitoramento contínuo de segurança.
+3. **No Discord:**
+    Use o comando `/dashboard`. O bot verificará o health check internamente e te dará o link.
+
+Esta prática garante que apenas você, com acesso SSH autenticado, possa ver os dados sensíveis do SOC.
+
+---
+
 <p align="center">
   🔐 <i>Sistema CyberIntel — Proteja a rede. Proteja o futuro.</i>
 </p>

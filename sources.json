@@ -1,40 +1,83 @@
 {
+  "blacklist_ips": [
+    "192.168.1.100",
+    "10.0.0.50"
+  ],
   "rss_feeds": [
-    "https://feeds.feedburner.com/TheHackersNews",
-    "https://www.bleepingcomputer.com/feed/",
-    "https://krebsonsecurity.com/feed/",
-    "https://www.darkreading.com/rss.xml",
-    "https://threatpost.com/feed/",
-    "https://www.schneier.com/blog/atom.xml",
-    "https://nakedsecurity.sophos.com/feed/",
-    "https://googleprojectzero.blogspot.com/feeds/posts/default",
-    "https://www.cisa.gov/uscert/ncas/alerts.xml",
-    "https://unit42.paloaltonetworks.com/feed/",
-    "https://research.checkpoint.com/feed/",
-    "https://securelist.com/feed/",
-    "https://www.trendmicro.com/rss/index.xml",
-    "https://www.wired.com/feed/category/security/latest/rss",
-    "https://techcrunch.com/category/security/feed/"
+    {
+      "name": "The Hacker News",
+      "url": "https://feeds.feedburner.com/TheHackersNews",
+      "category": "General News",
+      "priority": "High"
+    },
+    {
+      "name": "BleepingComputer",
+      "url": "https://www.bleepingcomputer.com/feed/",
+      "category": "Ransomware & Malware",
+      "priority": "High"
+    },
+    {
+      "name": "Krebs on Security",
+      "url": "https://krebsonsecurity.com/feed/",
+      "category": "Investigations",
+      "priority": "Medium"
+    },
+    {
+      "name": "Dark Reading",
+      "url": "https://www.darkreading.com/rss.xml",
+      "category": "Technical Analysis",
+      "priority": "Medium"
+    },
+    {
+      "name": "CISA Cybersecurity Advisories",
+      "url": "https://www.cisa.gov/cybersecurity-advisories/all.xml",
+      "category": "Government",
+      "priority": "Critical"
+    },
+    {
+      "name": "CERT.br News",
+      "url": "https://www.cert.br/rss/noticias/",
+      "category": "Government (BR)",
+      "priority": "High"
+    }
+  ],
+  "apis": [
+    {
+      "name": "NVD NIST",
+      "endpoint": "https://services.nvd.nist.gov/rest/json/cves/2.0",
+      "type": "CVE",
+      "priority": "Critical"
+    }
   ],
   "youtube_feeds": [
-    "https://www.youtube.com/feeds/videos.xml?channel_id=UC9-y-6csu5WGm29I7JiwpnA", 
-    "https://www.youtube.com/feeds/videos.xml?channel_id=UCCezIgC97PvUuR4_gbFUs5g",
-    "https://www.youtube.com/feeds/videos.xml?channel_id=UCyKB7i8vY3g227xXy_h3JzA",
-    "https://www.youtube.com/feeds/videos.xml?channel_id=UC0ZTPkdxlAKf-V33tqXwi3Q",
-    "https://www.youtube.com/feeds/videos.xml?channel_id=UCsTdlkL9oY7c3Yw_qQ9Nf7g",
-    "https://www.youtube.com/feeds/videos.xml?channel_id=UCf9_d-THgGED_jucV7IBkog",
-    "https://www.youtube.com/feeds/videos.xml?channel_id=UCJ6q9Iahwl5Xm61A7C6LdEQ"
+    {
+      "name": "Mental Outlaw",
+      "url": "https://www.youtube.com/feeds/videos.xml?channel_id=UC7YOGHUfC1Tb6E4pudI9STA",
+      "category": "News & Privacy"
+    },
+    {
+      "name": "David Bombal",
+      "url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCP7WmQ_UlOEwj5qel7dR5JQ",
+      "category": "Education"
+    },
+    {
+      "name": "NetworkChuck",
+      "url": "https://www.youtube.com/feeds/videos.xml?channel_id=UC9-y-6csu5WGm29I7JiwpnA",
+      "category": "Education"
+    }
   ],
-  "official_sites_reference_(not_rss)": [
-    "https://www.cisa.gov/",
-    "https://www.nist.gov/cyberframework",
-    "https://owasp.org/",
-    "https://www.sans.org/",
-    "https://www.first.org/",
-    "https://packetstormsecurity.com/",
-    "https://www.exploit-db.com/",
-    "https://cve.mitre.org/",
-    "https://nvd.nist.gov/",
-    "https://haveibeenpwned.com/"
+  "official_sites": [
+    {
+      "name": "CISA Home",
+      "url": "https://www.cisa.gov/"
+    },
+    {
+      "name": "NIST Cyber Framework",
+      "url": "https://www.nist.gov/cyberframework"
+    },
+    {
+      "name": "OWASP",
+      "url": "https://owasp.org/"
+    }
   ]
 }

@@ -25,7 +25,7 @@ services:
       container_name: cyber_soc_nodered
       restart: always
       ports:
-        - "1880:1880"
+        - "127.0.0.1:1880:1880"
       volumes:
         - ./node-red-data:/data
     logging:

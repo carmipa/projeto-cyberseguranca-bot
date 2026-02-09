@@ -32,6 +32,36 @@ async def api_stats(request):
         "last_scan": stats.last_scan_time.isoformat() if stats.last_scan_time else "Never"
     })
 
+# =========================================================
+# ACTIVE DEFENSE (HONEYPOT)
+# =========================================================
+
+async def intruder_response(request, attempt_type="Unknown"):
+    """
+    Resposta padrão para tentativas de intrusão.
+    Loga o IP e retorna 403.
+    """
+    peername = request.transport.get_extra_info('peername')
+    ip = peername[0] if peername else "Unknown"
+    
+    log.warning(f"⚠️ TENTATIVA DE INTRUSÃO DETECTADA!")
+    log.warning(f"Origem: {ip} | Alvo: {request.path} | Tipo: {attempt_type}")
+    log.warning("MENSAGEM: 'O malandro se acha malandro até achar um malandro melhor.'")
+    
+    # Aqui poderíamos adicionar lógica de ban automático no firewall
+    
+    return web.Response(text="⛔ ACESSO NEGADO: Sistema de Defesa Ativa acionado. Seu IP foi registrado.", status=403)
+
+@routes.get('/admin')
+@routes.get('/admin/')
+@routes.get('/wp-login.php')
+@routes.get('/.env')
+@routes.get('/config.json')
+async def honeypot_routes(request):
+    """Rotas armadilha para pegar scanners e curiosos."""
+    return await intruder_response(request, attempt_type="Honeypot Trap")
+
+
 async def start_web_server(host='0.0.0.0', port=8080):
     """Inicia o servidor web aiohttp."""
     app = web.Application()

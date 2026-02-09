@@ -1,0 +1,119 @@
+[
+    {
+        "id": "soc_tab",
+        "type": "tab",
+        "label": "CyberIntel SOC",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "ui_base",
+        "type": "ui_base",
+        "theme": {
+            "name": "theme-dark",
+            "data": {
+                "color": {
+                    "primary": "#00d1b2",
+                    "accent": "#ff0055",
+                    "fill-skeleton": "#2c2c2c"
+                }
+            }
+        }
+    },
+    {
+        "id": "http_news_in",
+        "type": "http in",
+        "z": "soc_tab",
+        "name": "News Ingestor",
+        "url": "/cyber-intel",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 120,
+        "y": 80,
+        "wires": [
+            [
+                "http_resp",
+                "ui_table"
+            ]
+        ]
+    },
+    {
+        "id": "http_health",
+        "type": "http in",
+        "z": "soc_tab",
+        "name": "Health Check",
+        "url": "/health",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 110,
+        "y": 160,
+        "wires": [
+            [
+                "http_resp"
+            ]
+        ]
+    },
+    {
+        "id": "http_resp",
+        "type": "http response",
+        "z": "soc_tab",
+        "name": "OK",
+        "statusCode": "200",
+        "headers": {},
+        "x": 330,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "ui_table",
+        "type": "ui_table",
+        "z": "soc_tab",
+        "group": "soc_group",
+        "name": "Alertas de Ameaças",
+        "order": 1,
+        "width": 12,
+        "height": 10,
+        "columns": [
+            {
+                "field": "timestamp",
+                "title": "Data/Hora",
+                "width": "20%",
+                "align": "left",
+                "format": "str",
+                "append": ""
+            },
+            {
+                "field": "title",
+                "title": "Vulnerabilidade/Notícia",
+                "width": "60%",
+                "align": "left",
+                "format": "str",
+                "append": ""
+            },
+            {
+                "field": "source",
+                "title": "Fonte",
+                "width": "20%",
+                "align": "left",
+                "format": "str",
+                "append": ""
+            }
+        ],
+        "outputs": 0,
+        "x": 400,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "soc_group",
+        "type": "ui_group",
+        "name": "Monitoramento de Ameaças em Tempo Real",
+        "tab": "soc_tab",
+        "order": 1,
+        "disp": true,
+        "width": "12",
+        "collapse": false
+    }
+]

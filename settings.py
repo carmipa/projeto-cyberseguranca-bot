@@ -6,6 +6,8 @@ load_dotenv()
 
 # Obrigatório
 TOKEN = os.getenv("DISCORD_TOKEN")
+# ID do Dono para comandos restritos (Active Defense)
+OWNER_ID = int(os.getenv("OWNER_ID", "0"))
 
 # Operação (opcional via env)
 COMMAND_PREFIX = os.getenv("COMMAND_PREFIX", "!")
@@ -16,3 +18,6 @@ except ValueError:
 
 # Logging Level (INFO, DEBUG, WARNING, ERROR)
 LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO").upper()
+
+# Node-RED Integration
+NODE_RED_ENDPOINT = os.getenv("NODE_RED_ENDPOINT", "http://localhost:1880/cyber-intel")
