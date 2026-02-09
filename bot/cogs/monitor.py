@@ -16,7 +16,8 @@ class Monitor(commands.Cog):
     """
     def __init__(self, bot):
         self.bot = bot
-        self.channel_id = int(os.getenv('DISCORD_NEWS_CHANNEL_ID', 0))
+        # Tenta pegar o ID do canal do .env (Sincronizado com o usuário)
+        self.channel_id = int(os.getenv('DISCORD_CHANNEL_ID', os.getenv('DISCORD_NEWS_CHANNEL_ID', 0)))
         
         # Inicia o loop se o channel ID estiver configurado
         if self.channel_id:
