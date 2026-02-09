@@ -6,10 +6,7 @@ services:
     env_file:
       - .env
     volumes:
-      - ./config.json:/app/config.json
-      - ./state.json:/app/state.json
-      - ./history.json:/app/history.json
-      - ./sources.json:/app/sources.json
+      - ./data:/app/data
       - ./logs:/app/logs
     networks:
       - cyber-network
