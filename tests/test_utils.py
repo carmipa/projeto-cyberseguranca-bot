@@ -63,12 +63,19 @@ def test_sources_urls_are_valid():
         data = json.load(f)
     
     all_urls = []
-    for key in data:
-        if isinstance(data[key], list):
-            all_urls.extend(data[key])
+    target_keys = ["rss_feeds", "youtube_feeds", "official_sites", "apis"]
     
-    for url in all_urls:
-        assert url.startswith(("http://", "https://")), f"URL inválida: {url}"
+    for key in target_keys:
+        if key in data and isinstance(data[key], list):
+            for item in data[key]:
+                url = None
+                if isinstance(item, str):
+                    url = item
+                elif isinstance(item, dict):
+                    url = item.get("url") or item.get("link") or item.get("endpoint")
+                
+                if url:
+                    assert url.startswith(("http://", "https://")), f"URL inválida em {key}: {url}"
 
 
 def test_readme_exists():

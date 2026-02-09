@@ -21,35 +21,14 @@ from utils.git_info import get_git_changes, get_current_hash
 from utils.storage import save_json_safe
 
 # Configuração de Logs
-import os
-import logging
-from logging.handlers import RotatingFileHandler
-
-# Configuração de Logs
+from utils.logger import setup_logger
 from src.services.dbService import init_db
 
-# Garante que o diretório logs existe
-os.makedirs("logs", exist_ok=True)
+# Inicializa Logger Centralizado
+setup_logger(level=LOG_LEVEL)
 
 # Inicializa banco de dados
 init_db()
-
-# Formatador
-formatter = logging.Formatter("%(asctime)s - [%(levelname)s] - %(message)s")
-
-# File Handler (Rotaciona a cada 5MB, mantém 3 arquivos)
-file_handler = RotatingFileHandler("logs/bot.log", maxBytes=5*1024*1024, backupCount=3, encoding="utf-8")
-file_handler.setFormatter(formatter)
-
-# Console Handler
-console_handler = logging.StreamHandler()
-console_handler.setFormatter(formatter)
-
-# Root Logger Config
-logging.basicConfig(
-    level=LOG_LEVEL,
-    handlers=[file_handler, console_handler]
-)
 
 log = logging.getLogger("CyberIntel")
 

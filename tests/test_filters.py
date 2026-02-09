@@ -60,14 +60,14 @@ def test_requirements_has_dependencies():
     assert "aiohttp" in content, "requirements.txt deve incluir aiohttp"
 
 
-def test_main_has_ssl_fix():
-    """Verifica que main.py usa certifi para SSL."""
-    with open("main.py", "r", encoding="utf-8") as f:
+def test_scanner_has_ssl_fix():
+    """Verifica que core/scanner.py usa certifi para SSL."""
+    with open("core/scanner.py", "r", encoding="utf-8") as f:
         content = f.read()
     
     # Deve usar certifi
-    assert "certifi" in content, "main.py deve importar certifi para SSL seguro"
+    assert "certifi" in content, "core/scanner.py deve importar certifi para SSL seguro"
     
     # NÃO deve ter CERT_NONE (inseguro)
-    assert "CERT_NONE" not in content, "main.py não deve usar CERT_NONE (inseguro)"
+    assert "CERT_NONE" not in content, "core/scanner.py não deve usar CERT_NONE (inseguro)"
 
