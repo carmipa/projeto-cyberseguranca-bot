@@ -2,6 +2,12 @@
 
 <div align="center">
 
+<p align="center">
+  <img alt="Cyber Segurança BOT" src="./icon.png" width="300">
+</p>
+
+<div align="center">
+
 ![CyberIntel Bot](https://img.shields.io/badge/CyberIntel-SOC%20Bot-00FFCC?style=for-the-badge&logo=shield-check&logoColor=white)
 ![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=for-the-badge&logo=python&logoColor=white)
 ![Discord](https://img.shields.io/badge/Discord-Bot-5865F2?style=for-the-badge&logo=discord&logoColor=white)
@@ -47,6 +53,7 @@ O **CyberIntel SOC Bot** é uma solução completa de **Threat Intelligence** de
 #### 🎯 Objetivo
 
 Automatizar completamente o processo de varredura de informações de segurança, coletando dados de:
+
 - 📰 **Feeds RSS/Atom** (The Hacker News, BleepingComputer, etc.)
 - 🎥 **Canais YouTube** de segurança
 - 🛡️ **APIs de Threat Intelligence** (NVD/NIST, AlienVault OTX)
@@ -266,6 +273,7 @@ The **CyberIntel SOC Bot** is a complete **Threat Intelligence** solution design
 #### 🎯 Objective
 
 Fully automate the security information scanning process, collecting data from:
+
 - 📰 **RSS/Atom Feeds** (The Hacker News, BleepingComputer, etc.)
 - 🎥 **YouTube Channels** (security content)
 - 🛡️ **Threat Intelligence APIs** (NVD/NIST, AlienVault OTX)
