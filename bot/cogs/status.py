@@ -32,7 +32,11 @@ class ScanButton(discord.ui.View):
             # Confirmação
             await interaction.followup.send("✅ Verificação concluída! Se houver notícias novas, elas foram enviadas para o canal.", ephemeral=True)
         except Exception as e:
-            await interaction.followup.send(f"❌ Erro ao verificar: {e}", ephemeral=True)
+            log.exception(f"❌ Erro no botão scan_now: {e}")
+            try:
+                await interaction.followup.send(f"❌ Erro ao verificar: {str(e)[:200]}", ephemeral=True)
+            except Exception as send_error:
+                log.error(f"❌ Falha ao enviar mensagem de erro no scan_now: {send_error}")
 
 
 class StatusCog(commands.Cog):
@@ -110,8 +114,8 @@ class StatusCog(commands.Cog):
             log.exception(f"❌ Erro no comando /status: {e}")
             try:
                 await interaction.followup.send("❌ Erro ao exibir status.", ephemeral=True)
-            except:
-                pass
+            except Exception as send_error:
+                log.error(f"❌ Falha ao enviar mensagem de erro no /status: {send_error}")
 
     @app_commands.command(name="now", description="Força uma verificação imediata de notícias.")
     @app_commands.checks.has_permissions(administrator=True)
@@ -131,8 +135,8 @@ class StatusCog(commands.Cog):
             log.exception(f"❌ Erro no comando /now: {e}")
             try:
                 await interaction.followup.send(f"❌ Erro: {str(e)[:200]}", ephemeral=True)
-            except:
-                pass
+            except Exception as send_error:
+                log.error(f"❌ Falha ao enviar mensagem de erro no /now: {send_error}")
 
 
 async def setup(bot):

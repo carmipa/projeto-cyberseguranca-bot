@@ -101,8 +101,8 @@ class Setup(commands.Cog):
             log.exception(f"❌ Erro no comando /soc_status: {e}")
             try:
                 await interaction.followup.send("❌ Erro ao verificar status dos serviços.", ephemeral=True)
-            except:
-                pass
+            except Exception as send_error:
+                log.error(f"❌ Falha ao enviar mensagem de erro no /soc_status: {send_error}")
 
 async def setup(bot):
     await bot.add_cog(Setup(bot))

@@ -38,8 +38,8 @@ class Stats(commands.Cog):
             log.exception(f"❌ Erro no comando /status_db: {e}")
             try:
                 await interaction.response.send_message("❌ Erro ao exibir estatísticas do banco.", ephemeral=True)
-            except:
-                pass
+            except Exception as send_error:
+                log.error(f"❌ Falha ao enviar mensagem de erro no /status_db: {send_error}")
 
 async def setup(bot):
     await bot.add_cog(Stats(bot))

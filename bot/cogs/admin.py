@@ -36,8 +36,8 @@ class AdminCog(commands.Cog):
                     await interaction.followup.send("❌ Falha ao executar varredura.", ephemeral=True)
                 else:
                     await interaction.response.send_message("❌ Falha ao executar varredura.", ephemeral=True)
-            except:
-                pass
+            except Exception as send_error:
+                log.error(f"❌ Falha ao enviar mensagem de erro no /forcecheck: {send_error}")
     
     @app_commands.command(name="post_latest", description="Força a postagem da notícia mais recente (ignora cache)")
     @app_commands.checks.has_permissions(administrator=True)
@@ -57,8 +57,8 @@ class AdminCog(commands.Cog):
             log.exception(f"❌ Erro em /post_latest: {e}")
             try:
                 await interaction.followup.send(f"❌ Falha: {str(e)[:200]}", ephemeral=True)
-            except:
-                pass
+            except Exception as send_error:
+                log.error(f"❌ Falha ao enviar mensagem de erro no /post_latest: {send_error}")
 
     
     # Error handlers para slash commands devem ser registrados no tree

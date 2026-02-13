@@ -43,8 +43,8 @@ class Monitor(commands.Cog):
             log.exception(f"❌ Erro no Force Scan: {e}")
             try:
                 await interaction.followup.send(f"❌ Erro ao executar scan: {str(e)[:200]}", ephemeral=True)
-            except:
-                pass
+            except Exception as send_error:
+                log.error(f"❌ Falha ao enviar mensagem de erro no force_scan: {send_error}")
 
     @app_commands.command(name="scan", description="Analisa uma URL suspeita (URLScan.io + VirusTotal)")
     @app_commands.describe(url="A URL para analisar")

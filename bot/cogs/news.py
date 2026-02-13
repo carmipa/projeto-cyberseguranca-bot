@@ -51,8 +51,8 @@ class News(commands.Cog):
             log.exception(f"❌ Erro ao executar comando /news: {e}")
             try:
                 await interaction.followup.send("❌ Ocorreu um erro ao buscar as notícias.")
-            except:
-                pass
+            except Exception as send_error:
+                log.error(f"❌ Falha ao enviar mensagem de erro no /news: {send_error}")
 
 async def setup(bot):
     await bot.add_cog(News(bot))

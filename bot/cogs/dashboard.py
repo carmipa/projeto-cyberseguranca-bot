@@ -70,8 +70,8 @@ class Dashboard(commands.Cog):
             log.exception(f"❌ Erro no comando /dashboard: {e}")
             try:
                 await interaction.followup.send("❌ Erro ao acessar dashboard.", ephemeral=True)
-            except:
-                pass
+            except Exception as send_error:
+                log.error(f"❌ Falha ao enviar mensagem de erro no /dashboard: {send_error}")
 
 async def setup(bot):
     await bot.add_cog(Dashboard(bot))
