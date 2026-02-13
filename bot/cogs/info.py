@@ -26,41 +26,55 @@ class InfoCog(commands.Cog):
 
     @app_commands.command(name="about", description="Sobre o CyberIntel System.")
     async def about(self, interaction: discord.Interaction):
-        embed = discord.Embed(
-            title="🛡️ CyberIntel SOC Bot",
-            description="Sistema de Inteligência em Cibersegurança e Monitoramento de Ameaças.",
-            color=discord.Color.from_rgb(0, 255, 64)
-        )
-        
-        embed.set_thumbnail(url=self.bot.user.avatar.url if self.bot.user.avatar else None)
-        
-        embed.add_field(name="👨‍💻 Desenvolvedor", value="Paulo André Carminati", inline=False)
-        embed.add_field(name="🛠️ Stack", value="Python 3.10 • Discord.py • Docker", inline=True)
-        embed.add_field(name="🚀 Versão", value="v3.1 (Stable)", inline=True)
-        
-        embed.set_footer(text="CyberIntel SOC System — Proteção Proativa")
-        
-        await interaction.response.send_message(embed=embed)
+        try:
+            embed = discord.Embed(
+                title="🛡️ CyberIntel SOC Bot",
+                description="Sistema de Inteligência em Cibersegurança e Monitoramento de Ameaças.",
+                color=discord.Color.from_rgb(0, 255, 64)
+            )
+            
+            if self.bot.user and self.bot.user.avatar:
+                embed.set_thumbnail(url=self.bot.user.avatar.url)
+            
+            embed.add_field(name="👨‍💻 Desenvolvedor", value="Paulo André Carminati", inline=False)
+            embed.add_field(name="🛠️ Stack", value="Python 3.10+ • Discord.py • Docker", inline=True)
+            embed.add_field(name="🚀 Versão", value="NetRunner v1.0", inline=True)
+            
+            embed.set_footer(text="CyberIntel SOC System — Proteção Proativa")
+            
+            await interaction.response.send_message(embed=embed)
+        except Exception as e:
+            log.exception(f"❌ Erro no comando /about: {e}")
+            await interaction.response.send_message("❌ Erro ao exibir informações.", ephemeral=True)
 
     @app_commands.command(name="feeds", description="Lista todos os feeds monitorados.")
     async def feeds(self, interaction: discord.Interaction):
-        urls = load_sources()
-        total = len(urls)
-        
-        display_urls = urls[:15]
-        remaining = total - 15
-        
-        lista = "\n".join(f"• <{u}>" for u in display_urls)
-        if remaining > 0:
-            lista += f"\n\n... e mais {remaining} fontes configuradas."
+        try:
+            urls = load_sources()
+            total = len(urls)
             
-        embed = discord.Embed(
-            title=f"📡 Fontes de Inteligência ({total})",
-            description=lista,
-            color=discord.Color.blue()
-        )
-        
-        await interaction.response.send_message(embed=embed)
+            if total == 0:
+                await interaction.response.send_message("⚠️ Nenhuma fonte configurada. Verifique `sources.json`.", ephemeral=True)
+                return
+            
+            display_urls = urls[:15]
+            remaining = total - 15
+            
+            lista = "\n".join(f"• <{u}>" for u in display_urls)
+            if remaining > 0:
+                lista += f"\n\n... e mais {remaining} fonte(s) configurada(s)."
+                
+            embed = discord.Embed(
+                title=f"📡 Fontes de Inteligência ({total})",
+                description=lista[:4096],  # Limite do Discord
+                color=discord.Color.blue()
+            )
+            
+            embed.set_footer(text="CyberIntel SOC | Monitoramento Ativo")
+            await interaction.response.send_message(embed=embed)
+        except Exception as e:
+            log.exception(f"❌ Erro ao listar feeds: {e}")
+            await interaction.response.send_message("❌ Erro ao carregar lista de feeds.", ephemeral=True)
 
     @app_commands.command(name="help", description="Mostra a lista de comandos disponíveis.")
     async def help_cmd(self, interaction: discord.Interaction):

@@ -2,8 +2,9 @@ import json
 import os
 import requests
 from datetime import datetime
+from utils.storage import p, load_json_safe, save_json_safe
 
-DB_PATH = "data/database.json"
+DB_PATH = p("database.json")  # Usa função p() para garantir caminho correto
 NODE_RED_ENDPOINT = os.getenv("NODE_RED_ENDPOINT", "http://nodered:1880/cyber-intel")
 
 import logging
@@ -14,33 +15,32 @@ def init_db():
     """
     Inicializa o arquivo JSON de banco de dados se não existir.
     Cria a estrutura básica com 'sent_news' e 'stats'.
+    Usa funções seguras de storage para garantir integridade.
     """
-    if not os.path.exists("data"):
-        os.makedirs("data", exist_ok=True)
+    default_data = {"sent_news": [], "stats": {"total_processed": 0}}
     
     if not os.path.exists(DB_PATH):
         try:
-            with open(DB_PATH, 'w', encoding='utf-8') as f:
-                json.dump({"sent_news": [], "stats": {"total_processed": 0}}, f, indent=4)
+            save_json_safe(DB_PATH, default_data, atomic=True)
+            log.info(f"✅ Database inicializado: {DB_PATH}")
         except Exception as e:
-            log.error(f"Erro ao inicializar DB JSON: {e}")
+            log.exception(f"❌ Erro ao inicializar DB JSON: {e}")
 
 def load_db():
-    try:
-        if not os.path.exists(DB_PATH):
-            init_db()
-        with open(DB_PATH, 'r', encoding='utf-8') as f:
-            return json.load(f)
-    except Exception as e:
-        log.error(f"Erro ao carregar DB: {e}")
-        return {"sent_news": [], "stats": {"total_processed": 0}}
+    """
+    Carrega banco de dados usando funções seguras com validação.
+    """
+    if not os.path.exists(DB_PATH):
+        init_db()
+    
+    return load_json_safe(DB_PATH, {"sent_news": [], "stats": {"total_processed": 0}}, validate=True)
 
 def save_db(data):
-    try:
-        with open(DB_PATH, 'w', encoding='utf-8') as f:
-            json.dump(data, f, indent=4, ensure_ascii=False)
-    except Exception as e:
-        log.error(f"Erro ao salvar DB: {e}")
+    """
+    Salva banco de dados usando escrita atômica e file locking.
+    Garante integridade para auditoria e compliance.
+    """
+    save_json_safe(DB_PATH, data, atomic=True)
 
 def is_news_sent(link):
     """
@@ -63,7 +63,7 @@ def notify_nodered(item):
         # Timeout curto para não travar o bot se o Node-RED estiver offline
         requests.post(NODE_RED_ENDPOINT, json=item, timeout=2)
     except Exception as e:
-        log.error(f"Erro ao comunicar com Node-RED: {e}")
+        log.warning(f"⚠️ Erro ao comunicar com Node-RED: {e}")
 
 def mark_news_as_sent(link, title="Sem Título"):
     """

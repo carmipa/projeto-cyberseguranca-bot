@@ -31,10 +31,15 @@ class News(commands.Cog):
                 color=0x00ffcc # Cyber Green
             )
             
-            for item in news_items:
+            # Limita a 5 notícias para não exceder limite do Discord (25 fields)
+            for item in news_items[:5]:
+                title = item.get('title', 'Sem título')[:256]  # Limite do Discord
+                summary = item.get('summary', 'Sem resumo')[:1024]  # Limite do Discord
+                link = item.get('link', '#')
+                
                 embed.add_field(
-                    name=item['title'],
-                    value=f"{item['summary']}\n[Ler mais]({item['link']})",
+                    name=title,
+                    value=f"{summary}\n[Ler mais]({link})",
                     inline=False
                 )
 
@@ -43,8 +48,11 @@ class News(commands.Cog):
             await interaction.followup.send(embed=embed)
             
         except Exception as e:
-            log.error(f"Erro ao executar comando /news: {e}")
-            await interaction.followup.send("❌ Ocorreu um erro ao buscar as notícias.")
+            log.exception(f"❌ Erro ao executar comando /news: {e}")
+            try:
+                await interaction.followup.send("❌ Ocorreu um erro ao buscar as notícias.")
+            except:
+                pass
 
 async def setup(bot):
     await bot.add_cog(News(bot))

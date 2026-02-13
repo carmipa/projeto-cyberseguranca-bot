@@ -30,6 +30,13 @@ setup_logger(level=LOG_LEVEL)
 # Inicializa banco de dados
 init_db()
 
+# Limpa backups antigos na inicialização
+try:
+    from utils.backup import cleanup_old_backups
+    cleanup_old_backups()
+except Exception as e:
+    log.warning(f"Falha ao limpar backups antigos: {e}")
+
 log = logging.getLogger("CyberIntel")
 
 
@@ -77,7 +84,7 @@ async def main():
             try:
                 await start_web_server(port=8080)
             except Exception as e:
-                log.error(f"❌ Falha ao iniciar Web Server: {e}")
+                log.exception(f"❌ Falha ao iniciar Web Server: {e}")
 
             # 1. Carregar Views Persistentes
             cfg = load_json_safe(p("config.json"), {})
@@ -87,7 +94,7 @@ async def main():
                         bot.add_view(FilterDashboard(int(gid)))
                         log.info(f"View persistente registrada para guild {gid}")
                     except Exception as e:
-                        log.error(f"Erro view guild {gid}: {e}")
+                        log.exception(f"❌ Erro ao registrar view para guild {gid}: {e}")
 
             # 2. Sync Comandos (Slash) por Guild para visibilidade INSTANTÂNEA
             log.info("🔄 Sincronizando comandos Slash por Guild...")
@@ -97,14 +104,14 @@ async def main():
                     await bot.tree.sync(guild=guild)
                     log.info(f"✅ Sync concluído para guild: {guild.name} ({guild.id})")
                 except Exception as e:
-                    log.error(f"❌ Falha ao sincronizar guild {guild.id}: {e}")
+                    log.exception(f"❌ Falha ao sincronizar guild {guild.id}: {e}")
             
             # Sync global redundante (pode levar 1h pra atualizar cache da API, mas bom ter)
             await bot.tree.sync()
             log.info("✅ Slash sync global solicitado.")
             
         except Exception as e:
-            log.error(f"Erro no on_ready: {e}")
+            log.exception(f"❌ Erro no on_ready: {e}")
 
     # =========================================================
     # CARREGAR COMPONENTES E CONFIGURAÇÕES NO BOOT
@@ -154,7 +161,7 @@ async def main():
                 state["last_announced_hash"] = current_hash
                 save_json_safe(state_file, state)
     except Exception as e:
-        log.error(f"❌ Falha ao processar anúncio de versão: {e}")
+        log.exception(f"❌ Falha ao processar anúncio de versão: {e}")
 
     # =========================================================
     # CARREGAR COGS

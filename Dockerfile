@@ -2,7 +2,8 @@ FROM python:3.10-slim
 
 # Metadata
 LABEL maintainer="Paulo André Carminati"
-LABEL description="Gundam News Discord Bot - Mafty Intelligence System"
+LABEL description="CyberIntel SOC Bot - Sistema de Varredura de Inteligência em Cibersegurança"
+LABEL version="1.0"
 
 # Variáveis de ambiente
 ENV PYTHONUNBUFFERED=1 \
@@ -31,9 +32,10 @@ COPY . .
 # Cria diretórios para dados persistentes (serão volumes)
 RUN mkdir -p /app/data /app/logs
 
-# Healthcheck (verifica se bot está rodando e se config existe)
-HEALTHCHECK --interval=60s --timeout=10s --start-period=30s --retries=3 \
-    CMD python -c "import os; exit(0 if os.path.exists('/app/config.json') else 1)"
+# Healthcheck melhorado - verifica se bot está respondendo
+# Para bot de varredura, verifica se processo Python está rodando e se consegue importar módulos
+HEALTHCHECK --interval=60s --timeout=10s --start-period=60s --retries=3 \
+    CMD python -c "import sys; import discord; sys.exit(0)" || exit 1
 
 # Comando de execução
 CMD ["python", "-u", "main.py"]

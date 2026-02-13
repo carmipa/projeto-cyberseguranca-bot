@@ -209,23 +209,10 @@ async def run_scan_once(bot: discord.Client, trigger: str = "manual", bypass_cac
         # =========================================================
         # UNIFIED STATE MANAGEMENT & AUTO-CLEANUP
         # =========================================================
-        state_file = p("state.json")
-        state = load_json_safe(state_file, {})
+        from utils.state_cleanup import check_and_cleanup_state
         
-        state.setdefault("dedup", {})
-        state.setdefault("http_cache", {})
-        state.setdefault("html_hashes", {})
-        state.setdefault("last_cleanup", 0)
-
-        # Regra de Auto-Limpeza (Cleanup) a cada 7 dias
-        now_ts = time.time()
-        last_clean = state.get("last_cleanup", 0)
-        CLEANUP_INTERVAL = 604800  # 7 dias em segundos
-
-        if now_ts - last_clean > CLEANUP_INTERVAL:
-            log.info("🧹 [Auto-Cleanup] Executando limpeza de cache (Ciclo de 7 dias)")
-            state["dedup"] = {}  # Limpa histórico de mensagens enviadas para forçar refresh se necessário
-            state["last_cleanup"] = now_ts
+        # Verifica e limpa state.json se necessário (por tempo ou tamanho)
+        state = check_and_cleanup_state(force=False)
         
         http_cache = state["http_cache"]
         html_hashes = state["html_hashes"]
@@ -276,7 +263,7 @@ async def run_scan_once(bot: discord.Client, trigger: str = "manual", bypass_cac
                     return (url, entries)
                     
                 except Exception as e:
-                    log.error(f"❌ Falha ao baixar feed '{url}': {e}")
+                    log.exception(f"❌ Falha ao baixar feed '{url}': {e}")
                     return None
 
         async with aiohttp.ClientSession(connector=connector, headers=base_headers, timeout=timeout) as session:
@@ -291,7 +278,7 @@ async def run_scan_once(bot: discord.Client, trigger: str = "manual", bypass_cac
                     log.info(f"🔎 Encontradas {len(cve_entries)} novas vulnerabilidades críticas (NVD).")
                     results.append(("api://nvd", cve_entries))
             except Exception as e:
-                log.error(f"❌ Falha ao buscar CVEs: {e}")
+                log.exception(f"❌ Falha ao buscar CVEs: {e}")
 
             # 3. Fetch OTX Pulses
             try:
@@ -311,7 +298,7 @@ async def run_scan_once(bot: discord.Client, trigger: str = "manual", bypass_cac
                         })
                     results.append(("api://otx", formatted_pulses))
             except Exception as e:
-                log.error(f"❌ Falha ao buscar OTX Pulses: {e}")
+                log.exception(f"❌ Falha ao buscar OTX Pulses: {e}")
 
             # 4. Process All Results
             for result in results:
@@ -529,10 +516,17 @@ async def run_scan_once(bot: discord.Client, trigger: str = "manual", bypass_cac
                      state["html_hashes"] = new_hashes
                      
         except Exception as e:
-            log.error(f"❌ Erro no HTML Monitor: {e}")
+            log.exception(f"❌ Erro no HTML Monitor: {e}")
 
         save_history(history_list)
         save_json_safe(state_file, state)
+        
+        # Backup automático após varredura bem-sucedida
+        try:
+            from utils.backup import auto_backup_critical_files
+            auto_backup_critical_files()
+        except Exception as backup_error:
+            log.warning(f"Falha no backup automático: {backup_error}")
         
         stats.scans_completed += 1
         stats.news_posted += sent_count

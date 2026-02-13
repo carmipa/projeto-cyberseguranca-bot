@@ -6,10 +6,21 @@ services:
     env_file:
       - .env
     volumes:
+      # Dados persistentes (JSONs de estado e histórico)
       - ./data:/app/data
+      # Logs do sistema
       - ./logs:/app/logs
+      # Configuração (se existir localmente, será usado)
+      - ./config.json:/app/data/config.json:ro
     networks:
       - cyber-network
+    # Limites de recursos para bot de varredura
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M
 
   nodered:
     image: nodered/node-red:latest

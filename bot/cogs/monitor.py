@@ -32,49 +32,63 @@ class Monitor(commands.Cog):
     @app_commands.checks.has_permissions(administrator=True)
     async def force_scan(self, interaction: discord.Interaction):
         """Comando para forçar o ciclo de scan."""
-        await interaction.response.defer(thinking=True)
-        log.info(f"⚡ Force Scan iniciado por {interaction.user.name}")
-        
-        # Chama a função core do scanner
         try:
+            await interaction.response.defer(ephemeral=True)
+            log.info(f"⚡ Force Scan iniciado por {interaction.user.name}")
+            
+            # Chama a função core do scanner
             await run_scan_once(self.bot, trigger="manual_force")
             await interaction.followup.send("✅ **Scan Manual Concluído!** Verifique os canais para novos alertas.")
         except Exception as e:
-            log.error(f"Erro no Force Scan: {e}")
-            await interaction.followup.send(f"❌ Erro ao executar scan: {e}")
+            log.exception(f"❌ Erro no Force Scan: {e}")
+            try:
+                await interaction.followup.send(f"❌ Erro ao executar scan: {str(e)[:200]}", ephemeral=True)
+            except:
+                pass
 
     @app_commands.command(name="scan", description="Analisa uma URL suspeita (URLScan.io + VirusTotal)")
     @app_commands.describe(url="A URL para analisar")
     async def scan_command(self, interaction: discord.Interaction, url: str):
         """Comando de Scan de URL."""
-        await interaction.response.defer(thinking=True)
+        await interaction.response.defer()
         
-        # 1. URLScan.io
-        scan_data = await ThreatService.scan_url_urlscan(url)
-        uuid = scan_data.get("uuid") if scan_data else None
+        # Validação de URL
+        if not url or not url.startswith(("http://", "https://")):
+            await interaction.followup.send("❌ URL inválida. Use uma URL completa começando com http:// ou https://")
+            return
         
-        # 2. VirusTotal
-        vt_data = await ThreatService.check_vt_reputation(url)
-        
-        embed = discord.Embed(title="🔎 Relatório de Inteligência", color=0x00FFCC)
-        embed.add_field(name="Alvo", value=url, inline=False)
-        
-        if uuid:
-            result_url = f"https://urlscan.io/result/{uuid}/"
-            embed.add_field(name="URLScan.io", value=f"[Ver Relatório Completo]({result_url})", inline=True)
-            # Nota: O resultado visual (screenshot) demora para processar, então mandamos o link
-        else:
-            embed.add_field(name="URLScan.io", value="❌ Falha ou não configurado", inline=True)
+        try:
+            # 1. URLScan.io
+            scan_data = await ThreatService.scan_url_urlscan(url)
+            uuid = scan_data.get("uuid") if scan_data else None
             
-        if vt_data:
-             # Se for submit, tem ID. Se for rep, tem stats.
-             # Como implementamos submit, mostramos o link da análise
-             analysis_id = vt_data.get("id", "Unknown")
-             embed.add_field(name="VirusTotal", value=f"Análise submetida.\nID: {analysis_id}", inline=True)
-        else:
-             embed.add_field(name="VirusTotal", value="❌ Falha ou não configurado", inline=True)
-             
-        await interaction.followup.send(embed=embed)
+            # 2. VirusTotal
+            vt_data = await ThreatService.check_vt_reputation(url)
+            
+            embed = discord.Embed(title="🔎 Relatório de Inteligência", color=0x00FFCC)
+            embed.add_field(name="Alvo", value=url[:1024], inline=False)  # Limite do Discord
+            
+            if uuid:
+                result_url = f"https://urlscan.io/result/{uuid}/"
+                embed.add_field(name="URLScan.io", value=f"[Ver Relatório Completo]({result_url})", inline=True)
+                # Nota: O resultado visual (screenshot) demora para processar, então mandamos o link
+            else:
+                embed.add_field(name="URLScan.io", value="❌ Falha ou não configurado", inline=True)
+                
+            if vt_data and not vt_data.get("error"):
+                 # Se for submit, tem ID. Se for rep, tem stats.
+                 # Como implementamos submit, mostramos o link da análise
+                 analysis_id = vt_data.get("id", "Unknown")
+                 embed.add_field(name="VirusTotal", value=f"Análise submetida.\nID: {analysis_id[:50]}", inline=True)
+            else:
+                 embed.add_field(name="VirusTotal", value="❌ Falha ou não configurado", inline=True)
+                 
+            embed.set_footer(text="CyberIntel SOC | Threat Intelligence")
+            await interaction.followup.send(embed=embed)
+            
+        except Exception as e:
+            log.exception(f"❌ Erro ao analisar URL {url}: {e}")
+            await interaction.followup.send(f"❌ Erro ao analisar URL: {e}")
 
     @tasks.loop(minutes=30)
     async def monitor_cyber_news(self):
@@ -107,7 +121,7 @@ class Monitor(commands.Cog):
                     mark_news_as_sent(item['link'], item['title'])
                     
         except Exception as e:
-            log.error(f"Erro no loop de monitoramento: {e}")
+            log.exception(f"❌ Erro no loop de monitoramento: {e}")
 
     @monitor_cyber_news.before_loop
     async def before_monitor(self):

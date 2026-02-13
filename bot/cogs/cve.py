@@ -15,9 +15,14 @@ class CVE(commands.Cog):
     async def cve(self, interaction: discord.Interaction, cve_id: str):
         # Audit Log
         user = interaction.user
-        log.info(f"AUDIT: Comando /cve {cve_id} solicitado por {user}")
+        log.info(f"AUDIT: Comando /cve {cve_id} solicitado por {user} (ID: {user.id})")
 
         await interaction.response.defer()
+        
+        # Validação de entrada
+        if not cve_id or not isinstance(cve_id, str):
+            await interaction.followup.send("❌ ID da CVE inválido.")
+            return
         
         # Formata para garantir uppercase
         cve_id = cve_id.strip().upper()
@@ -26,8 +31,18 @@ class CVE(commands.Cog):
         if not cve_id.startswith("CVE-"):
             await interaction.followup.send("❌ Formato inválido. Use: `CVE-ANO-NUMERO` (Ex: CVE-2023-1234)")
             return
+        
+        # Validação de comprimento
+        if len(cve_id) > 20:  # CVE-YYYY-NNNNNNNN (máximo esperado)
+            await interaction.followup.send("❌ ID da CVE muito longo. Verifique o formato.")
+            return
 
-        details = await get_cve_details(cve_id)
+        try:
+            details = await get_cve_details(cve_id)
+        except Exception as e:
+            log.exception(f"❌ Erro ao buscar detalhes da CVE {cve_id}: {e}")
+            await interaction.followup.send(f"❌ Erro ao buscar informações da CVE. Tente novamente.")
+            return
         
         if details:
             # Define cor baseada na criticidade (CVSS)
@@ -41,7 +56,8 @@ class CVE(commands.Cog):
                     color = 0xffff00 # Medium - Yellow
                 else:
                     color = 0x00ff00 # Low - Green
-            except:
+            except Exception as e:
+                log.debug(f"Erro ao parsear CVSS score: {e}")
                 color = 0x808080 # Unknown - Grey
             
             embed = discord.Embed(
@@ -57,11 +73,13 @@ class CVE(commands.Cog):
                 prods = "\n".join([f"`{p}`" for p in details['vulnerable_product']])
                 embed.add_field(name="⚠️ Produtos Afetados (Amostra)", value=prods, inline=False)
             
-            if details['references']:
-                refs = "\n".join([f"• {r}" for r in details['references']])
+            if details.get('references'):
+                refs = "\n".join([f"• {r}" for r in details['references'][:10]])  # Máximo 10 referências
+                if len(details['references']) > 10:
+                    refs += f"\n\n... e mais {len(details['references']) - 10} referência(s)."
                 embed.add_field(name="🔗 Referências", value=refs[:1024], inline=False) # Limite do Discord
                 
-            embed.set_footer(text="Fonte: CIRCL.lu CVE Search | CyberIntel System")
+            embed.set_footer(text="Fonte: NIST NVD | CyberIntel System")
             
             await interaction.followup.send(embed=embed)
         else:

@@ -22,12 +22,20 @@ class AdminCog(commands.Cog):
         """Força uma varredura imediata sem abrir o dashboard."""
         try:
             await interaction.response.defer(ephemeral=True)
+            
+            if not self.run_scan_once:
+                await interaction.followup.send("❌ Função de scan não disponível.", ephemeral=True)
+                return
+            
             await self.run_scan_once(trigger="forcecheck")
             await interaction.followup.send("✅ Varredura forçada concluída!", ephemeral=True)
         except Exception as e:
             log.exception(f"❌ Erro crítico em /forcecheck: {e}")
             try:
-                await interaction.followup.send("❌ Falha ao executar varredura.", ephemeral=True)
+                if interaction.response.is_done():
+                    await interaction.followup.send("❌ Falha ao executar varredura.", ephemeral=True)
+                else:
+                    await interaction.response.send_message("❌ Falha ao executar varredura.", ephemeral=True)
             except:
                 pass
     
@@ -37,30 +45,24 @@ class AdminCog(commands.Cog):
         """Força a postagem de 1 notícia ignorando se ela já foi postada."""
         try:
             await interaction.response.defer(ephemeral=True)
+            
+            if not self.run_scan_once:
+                await interaction.followup.send("❌ Função de scan não disponível.", ephemeral=True)
+                return
+            
             await interaction.followup.send("🚀 Buscando notícia mais recente (Bypass Mode)...", ephemeral=True)
             await self.run_scan_once(trigger="post_latest", bypass_cache=True)
             await interaction.followup.send("✅ Operação finalizada. Verifique o canal SOC.", ephemeral=True)
         except Exception as e:
             log.exception(f"❌ Erro em /post_latest: {e}")
-            await interaction.followup.send(f"❌ Falha: {e}", ephemeral=True)
+            try:
+                await interaction.followup.send(f"❌ Falha: {str(e)[:200]}", ephemeral=True)
+            except:
+                pass
 
     
-    @forcecheck.error
-    async def forcecheck_error(self, interaction: discord.Interaction, error: app_commands.AppCommandError):
-        """Trata erros do comando /forcecheck."""
-        if isinstance(error, app_commands.MissingPermissions):
-            msg = "❌ Você precisa ter **Administrador** para usar este comando."
-            
-            try:
-                if not interaction.response.is_done():
-                    await interaction.response.send_message(msg, ephemeral=True)
-                else:
-                    await interaction.followup.send(msg, ephemeral=True)
-            except discord.NotFound:
-                pass
-            return
-        
-        log.exception("Erro no comando /forcecheck", exc_info=error)
+    # Error handlers para slash commands devem ser registrados no tree
+    # Por enquanto, tratamento de erro está dentro do próprio comando
 
 
 async def setup(bot):

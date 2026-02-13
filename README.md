@@ -1,93 +1,477 @@
 # 🛡️ CyberIntel SOC Bot
 
-### Sistema Avançado de Threat Intelligence & Defesa Ativa
+<div align="center">
 
-<p align="center">
-  <img alt="CyberIntel Bot" src="./icon.png" width="200">
-</p>
+![CyberIntel Bot](https://img.shields.io/badge/CyberIntel-SOC%20Bot-00FFCC?style=for-the-badge&logo=shield-check&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![Discord](https://img.shields.io/badge/Discord-Bot-5865F2?style=for-the-badge&logo=discord&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=for-the-badge&logo=docker&logoColor=white)
 
-O **CyberIntel SOC Bot** é uma solução de engenharia de segurança de alta performance desenvolvida para automatizar a coleta, análise e triagem de inteligência cibernética global. O sistema atua como o núcleo de um SOC (Security Operations Center) pessoal, integrando APIs de segurança Tier 1 e monitoramento regulatório internacional em uma interface unificada via Discord e Node-RED.
+**Sistema Avançado de Threat Intelligence & Defesa Ativa**  
+**Advanced Threat Intelligence & Active Defense System**
 
----
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
+[![GitHub stars](https://img.shields.io/github/stars/carmipa/projeto-cyberseguranca-bot?style=flat-square&logo=github)](https://github.com/carmipa/projeto-cyberseguranca-bot/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/carmipa/projeto-cyberseguranca-bot?style=flat-square&logo=github)](https://github.com/carmipa/projeto-cyberseguranca-bot/network)
+[![GitHub issues](https://img.shields.io/github/issues/carmipa/projeto-cyberseguranca-bot?style=flat-square&logo=github)](https://github.com/carmipa/projeto-cyberseguranca-bot/issues)
 
-## 🚀 Funcionalidades de Engenharia
+**🇧🇷 [Português](#-português) • 🇺🇸 [English](#-english)**
 
-### 🛰️ Agregação de Inteligência Multicamadas
-
-* **NVD (NIST)**: Monitoramento em tempo real de novas CVEs com filtragem inteligente por score CVSS v3.1 (Alertas Críticos).
-* **Eixo Regulatório Global**: Feed especializado em mudanças legislativas da União Europeia (ENISA/EDPB), EUA (CISA/NIST) e Brasil (ANPD/CERT.br).
-* **Threat Feeds Comunitários**: Integração com The Hacker News, BleepingComputer e AlienVault OTX para detecção de campanhas de ataques ativos.
-
-### 🔍 Engine de Análise e Reputação
-
-* **Scanner de URL/Arquivos**: Comandos integrados para consultas via VirusTotal e URLScan.io com retorno de vereditos, screenshots e análise de IoCs (Indicadores de Comprometimento).
-* **Visual Severity Mapping**: Sistema de cores dinâmico nos embeds para triagem visual imediata:
-  * 🔴 **Crítico**: Vulnerabilidades graves (Ação Imediata).
-  * 🔵 **Regulatório**: Mudanças em Compliance e GRC.
-  * 🟢 **Intel**: Notícias e tendências de cibersegurança.
-
-### 🛡️ Defesa Ativa (Active Defense)
-
-* **Malandro Protocol**: Lógica proprietária de detecção de intrusão interna para proteger comandos administrativos, com logs de auditoria e resposta automática a usuários não autorizados.
-* **Hardening de Infraestrutura**: Deploy totalmente containerizado com Docker, garantindo isolamento de processos e segurança do host.
-
-### 🛠️ Stack Tecnológica
-
-* **Backend**: Python (Asyncio / Discord.py)
-* **Containers**: Docker & Docker Compose
-* **Telemetria**: Node-RED Dashboard (Monitoramento visual em tempo real)
-* **APIs Integradas**: NVD (NIST), VirusTotal, URLScan.io, AlienVault OTX
-* **Protocolos de Acesso**: Túnel SSH para acesso seguro ao dashboard de telemetria
+</div>
 
 ---
 
-## ⚡ Início Rápido (Instalação)
+## 🇧🇷 Português
 
-### 🐳 Via Docker (Recomendado)
+### 📋 Índice
+
+- [✨ Sobre o Projeto](#-sobre-o-projeto)
+- [🎯 Funcionalidades Principais](#-funcionalidades-principais)
+- [🏗️ Arquitetura do Sistema](#️-arquitetura-do-sistema)
+- [🚀 Início Rápido](#-início-rápido)
+- [🐳 Deploy com Docker](#-deploy-com-docker)
+- [⚙️ Configuração](#️-configuração)
+- [🧰 Comandos Disponíveis](#-comandos-disponíveis)
+- [📊 Estrutura do Projeto](#-estrutura-do-projeto)
+- [🔌 Integrações e APIs](#-integrações-e-apis)
+- [🛡️ Segurança](#️-segurança)
+- [📈 Monitoramento e Logs](#-monitoramento-e-logs)
+- [📚 Documentação Completa](#-documentação-completa)
+
+---
+
+### ✨ Sobre o Projeto
+
+O **CyberIntel SOC Bot** é uma solução completa de **Threat Intelligence** desenvolvida para automatizar a coleta, análise e distribuição de inteligência cibernética em tempo real. O sistema funciona como o núcleo de um **SOC (Security Operations Center) pessoal**, integrando múltiplas fontes de informação e APIs de segurança Tier 1 em uma interface unificada via Discord.
+
+#### 🎯 Objetivo
+
+Automatizar completamente o processo de varredura de informações de segurança, coletando dados de:
+- 📰 **Feeds RSS/Atom** (The Hacker News, BleepingComputer, etc.)
+- 🎥 **Canais YouTube** de segurança
+- 🛡️ **APIs de Threat Intelligence** (NVD/NIST, AlienVault OTX)
+- 🌐 **Sites Oficiais** (CISA, NIST, CERT.br)
+- 🔍 **Análise de URLs** (URLScan.io, VirusTotal)
+
+---
+
+### 🎯 Funcionalidades Principais
+
+#### 🛰️ Agregação de Inteligência Multicamadas
+
+| Recurso | Descrição | Status |
+|---------|-----------|--------|
+| 📡 **Multi-Source Scanner** | Varre feeds RSS, Atom, YouTube e APIs simultaneamente | ✅ |
+| 🔎 **NVD (NIST) Integration** | Monitoramento de CVEs críticas (CVSS > 7.0) | ✅ |
+| 🛸 **AlienVault OTX** | Pulses de ameaças ativas e campanhas | ✅ |
+| 🕵️ **HTML Monitor** | Detecção de mudanças em sites oficiais via hash | ✅ |
+| 📺 **YouTube Feeds** | Monitoramento de canais de segurança | ✅ |
+
+#### 🔍 Engine de Análise e Reputação
+
+| Recurso | Descrição | Status |
+|---------|-----------|--------|
+| 🔗 **URL Scanner** | Análise via URLScan.io + VirusTotal | ✅ |
+| 🎨 **Visual Severity Mapping** | Sistema de cores dinâmico (🔴 Crítico, 🟠 Alto, 🟢 Info) | ✅ |
+| 🛡️ **Smart Filtering** | Filtros inteligentes por categoria | ✅ |
+| 🔄 **Deduplication Engine** | Previne posts duplicados | ✅ |
+
+#### 🛡️ Defesa Ativa e Segurança
+
+| Recurso | Descrição | Status |
+|---------|-----------|--------|
+| 🚨 **Active Defense** | Sistema de honeypots para detecção de intrusão | ✅ |
+| 🔐 **Malandro Protocol** | Proteção de comandos administrativos | ✅ |
+| 🐳 **Container Isolation** | Deploy totalmente containerizado | ✅ |
+| 📝 **Audit Logging** | Logs completos de todas as operações | ✅ |
+
+---
+
+### 🏗️ Arquitetura do Sistema
+
+```mermaid
+graph TB
+    subgraph "🌐 Fontes de Inteligência"
+        RSS[RSS Feeds]
+        YT[YouTube Channels]
+        API[APIs de Segurança]
+        HTML[Sites Oficiais]
+    end
+
+    subgraph "🔧 Core System"
+        Scanner[Scanner Loop]
+        Filter[Engine de Filtros]
+        Monitor[HTML Monitor]
+    end
+
+    subgraph "💾 Persistência"
+        Config[config.json]
+        History[history.json]
+        State[state.json]
+        DB[database.json]
+    end
+
+    subgraph "📤 Output"
+        Discord[Discord Bot]
+        NodeRED[Node-RED Dashboard]
+    end
+
+    RSS --> Scanner
+    YT --> Scanner
+    API --> Scanner
+    HTML --> Monitor
+    
+    Scanner --> Filter
+    Monitor --> Filter
+    
+    Filter --> Discord
+    Filter --> NodeRED
+```
+
+📖 **[Documentação Completa de Arquitetura](./ARCHITECTURE.md)**
+
+---
+
+### 🚀 Início Rápido
+
+#### 📋 Pré-requisitos
+
+- 🐳 **Docker** e **Docker Compose**
+- 🔑 **Token do Discord Bot**
+- (Opcional) **API Keys** para serviços externos
+
+#### ⚡ Deploy Rápido (3 Passos)
 
 ```bash
+# 1. Clone o repositório
 git clone https://github.com/carmipa/projeto-cyberseguranca-bot.git
 cd projeto-cyberseguranca-bot
-# Configure seu .env
+
+# 2. Configure o .env
+cp .env.example .env
+nano .env  # Adicione DISCORD_TOKEN e OWNER_ID
+
+# 3. Suba os containers
 docker compose up -d --build
 ```
 
-### 🐍 Via Python Local
+**✅ Pronto!** O bot está rodando e começará a varrer informações automaticamente.
+
+📖 **[Guia Rápido Detalhado](./QUICK_START.md)**
+
+---
+
+### 🐳 Deploy com Docker
 
 ```bash
-python -m venv .venv
-source .venv/bin/activate  # Linux/Mac
-.venv\Scripts\activate     # Windows
-pip install -r requirements.txt
-python main.py
+# Ver logs em tempo real
+docker compose logs -f cyber-bot
+
+# Ver status
+docker compose ps
+
+# Reiniciar
+docker compose restart cyber-bot
+
+# Atualizar código
+git pull && docker compose up -d --build
+```
+
+📖 **[Guia Completo de Deploy](./DEPLOY.md)**
+
+---
+
+### ⚙️ Configuração
+
+#### 🔐 Arquivo `.env`
+
+```env
+# Obrigatório
+DISCORD_TOKEN=seu_token_discord_aqui
+OWNER_ID=seu_id_discord
+
+# Opcional - APIs
+NVD_API_KEY=sua_chave_nvd
+OTX_API_KEY=sua_chave_otx
+URLSCAN_API_KEY=sua_chave_urlscan
+VT_API_KEY=sua_chave_vt
+
+# Configurações
+LOOP_MINUTES=30
+LOG_LEVEL=INFO
 ```
 
 ---
 
-## 🧰 Guia de Comandos Slash
+### 🧰 Comandos Disponíveis
 
-| Comando | Descrição |
-|---------|-----------|
-| `/news` | Exibe os 5 últimos alertas de inteligência. |
-| `/cve [id]` | Detalha uma vulnerabilidade via NVD. |
-| `/scan [url]` | Analisa uma URL suspeita (URLScan.io + VirusTotal). |
-| `/status` | Saúde do bot (Uptime, Memória, Stats). |
-| `/forcecheck` | [Admin] Força a busca imediata em todos os feeds. |
-| `/post_latest`| [Admin] Força a postagem da última notícia (Bypass Cache). |
-| `/set_channel`| [Admin] Define o canal oficial do SOC. |
-| `/dashboard` | [Admin] Status e link do SOC Dashboard. |
+#### 📡 Inteligência
+
+| Comando | Descrição | Permissão |
+|---------|-----------|-----------|
+| `/news` | Últimas 5 notícias | Todos |
+| `/cve [id]` | Detalhes de CVE | Todos |
+| `/scan [url]` | Analisa URL | Todos |
+| `/status` | Saúde do bot | Todos |
+
+#### ⚙️ Administração
+
+| Comando | Descrição | Permissão |
+|---------|-----------|-----------|
+| `/set_channel` | Define canal SOC | Admin |
+| `/forcecheck` | Força varredura | Admin |
+| `/post_latest` | Força postagem | Admin |
+| `/dashboard` | Link do dashboard | Admin |
+
+📖 **[Tutorial Completo](./TUTORIAL.md)**
 
 ---
 
-## 🌍 Documentação Completa
+### 📚 Documentação Completa
 
-* 📖 **[Guia Técnico Detalhado (PT-BR)](./README_PT.md)**
-* 🐳 **[Guia de Deploy em VPS (Docker)](./DEPLOY.md)**
-* 🎮 **[Tutorial de Comandos e Uso](./TUTORIAL.md)**
-* 🇺🇸 **[English Documentation](./README_EN.md)**
+| Documento | Descrição |
+|-----------|-----------|
+| 📖 **[README_PT.md](./README_PT.md)** | Documentação técnica completa (PT-BR) |
+| 🇺🇸 **[README_EN.md](./README_EN.md)** | English Documentation |
+| 🐳 **[DEPLOY.md](./DEPLOY.md)** | Guia de deploy em VPS |
+| ⚡ **[QUICK_START.md](./QUICK_START.md)** | Guia rápido |
+| 🎮 **[TUTORIAL.md](./TUTORIAL.md)** | Tutorial de comandos |
+| 🏗️ **[ARCHITECTURE.md](./ARCHITECTURE.md)** | Arquitetura do sistema |
 
 ---
 
-<p align="center">
-  🔐 <i>Protegendo o que importa com inteligência proativa.</i>
-</p>
+## 🇺🇸 English
+
+### 📋 Table of Contents
+
+- [✨ About the Project](#-about-the-project)
+- [🎯 Main Features](#-main-features)
+- [🏗️ System Architecture](#️-system-architecture)
+- [🚀 Quick Start](#-quick-start)
+- [🐳 Docker Deployment](#-docker-deployment)
+- [⚙️ Configuration](#️-configuration)
+- [🧰 Available Commands](#-available-commands)
+- [📊 Project Structure](#-project-structure)
+- [🔌 Integrations and APIs](#-integrations-and-apis)
+- [🛡️ Security](#️-security)
+- [📈 Monitoring and Logs](#-monitoring-and-logs)
+- [📚 Complete Documentation](#-complete-documentation)
+
+---
+
+### ✨ About the Project
+
+The **CyberIntel SOC Bot** is a complete **Threat Intelligence** solution designed to automate the collection, analysis, and distribution of cybersecurity intelligence in real-time. The system acts as the core of a **personal SOC (Security Operations Center)**, integrating multiple information sources and Tier 1 security APIs into a unified interface via Discord.
+
+#### 🎯 Objective
+
+Fully automate the security information scanning process, collecting data from:
+- 📰 **RSS/Atom Feeds** (The Hacker News, BleepingComputer, etc.)
+- 🎥 **YouTube Channels** (security content)
+- 🛡️ **Threat Intelligence APIs** (NVD/NIST, AlienVault OTX)
+- 🌐 **Official Sites** (CISA, NIST, CERT.br)
+- 🔍 **URL Analysis** (URLScan.io, VirusTotal)
+
+---
+
+### 🎯 Main Features
+
+#### 🛰️ Multi-Layer Intelligence Aggregation
+
+| Feature | Description | Status |
+|---------|-------------|--------|
+| 📡 **Multi-Source Scanner** | Scans RSS, Atom, YouTube feeds and APIs simultaneously | ✅ |
+| 🔎 **NVD (NIST) Integration** | Critical CVE monitoring (CVSS > 7.0) | ✅ |
+| 🛸 **AlienVault OTX** | Active threat pulses and campaigns | ✅ |
+| 🕵️ **HTML Monitor** | Change detection on official sites via hash | ✅ |
+| 📺 **YouTube Feeds** | Security channel monitoring | ✅ |
+
+#### 🔍 Analysis and Reputation Engine
+
+| Feature | Description | Status |
+|---------|-------------|--------|
+| 🔗 **URL Scanner** | Analysis via URLScan.io + VirusTotal | ✅ |
+| 🎨 **Visual Severity Mapping** | Dynamic color system (🔴 Critical, 🟠 High, 🟢 Info) | ✅ |
+| 🛡️ **Smart Filtering** | Intelligent filters by category | ✅ |
+| 🔄 **Deduplication Engine** | Prevents duplicate posts | ✅ |
+
+#### 🛡️ Active Defense and Security
+
+| Feature | Description | Status |
+|---------|-------------|--------|
+| 🚨 **Active Defense** | Honeypot system for intrusion detection | ✅ |
+| 🔐 **Malandro Protocol** | Administrative command protection | ✅ |
+| 🐳 **Container Isolation** | Fully containerized deployment | ✅ |
+| 📝 **Audit Logging** | Complete logs of all operations | ✅ |
+
+---
+
+### 🏗️ System Architecture
+
+```mermaid
+graph TB
+    subgraph "🌐 Intelligence Sources"
+        RSS[RSS Feeds]
+        YT[YouTube Channels]
+        API[Security APIs]
+        HTML[Official Sites]
+    end
+
+    subgraph "🔧 Core System"
+        Scanner[Scanner Loop]
+        Filter[Filter Engine]
+        Monitor[HTML Monitor]
+    end
+
+    subgraph "💾 Persistence"
+        Config[config.json]
+        History[history.json]
+        State[state.json]
+        DB[database.json]
+    end
+
+    subgraph "📤 Output"
+        Discord[Discord Bot]
+        NodeRED[Node-RED Dashboard]
+    end
+
+    RSS --> Scanner
+    YT --> Scanner
+    API --> Scanner
+    HTML --> Monitor
+    
+    Scanner --> Filter
+    Monitor --> Filter
+    
+    Filter --> Discord
+    Filter --> NodeRED
+```
+
+📖 **[Complete Architecture Documentation](./ARCHITECTURE.md)**
+
+---
+
+### 🚀 Quick Start
+
+#### 📋 Prerequisites
+
+- 🐳 **Docker** and **Docker Compose**
+- 🔑 **Discord Bot Token**
+- (Optional) **API Keys** for external services
+
+#### ⚡ Quick Deployment (3 Steps)
+
+```bash
+# 1. Clone repository
+git clone https://github.com/carmipa/projeto-cyberseguranca-bot.git
+cd projeto-cyberseguranca-bot
+
+# 2. Configure .env
+cp .env.example .env
+nano .env  # Add DISCORD_TOKEN and OWNER_ID
+
+# 3. Start containers
+docker compose up -d --build
+```
+
+**✅ Done!** The bot is running and will start scanning information automatically.
+
+📖 **[Detailed Quick Start Guide](./QUICK_START.md)**
+
+---
+
+### 🐳 Docker Deployment
+
+```bash
+# View real-time logs
+docker compose logs -f cyber-bot
+
+# Check status
+docker compose ps
+
+# Restart
+docker compose restart cyber-bot
+
+# Update code
+git pull && docker compose up -d --build
+```
+
+📖 **[Complete Deployment Guide](./DEPLOY.md)**
+
+---
+
+### ⚙️ Configuration
+
+#### 🔐 `.env` File
+
+```env
+# Required
+DISCORD_TOKEN=your_discord_token_here
+OWNER_ID=your_discord_id
+
+# Optional - APIs
+NVD_API_KEY=your_nvd_key
+OTX_API_KEY=your_otx_key
+URLSCAN_API_KEY=your_urlscan_key
+VT_API_KEY=your_vt_key
+
+# Settings
+LOOP_MINUTES=30
+LOG_LEVEL=INFO
+```
+
+---
+
+### 🧰 Available Commands
+
+#### 📡 Intelligence
+
+| Command | Description | Permission |
+|---------|-------------|------------|
+| `/news` | Latest 5 news | All |
+| `/cve [id]` | CVE details | All |
+| `/scan [url]` | Analyze URL | All |
+| `/status` | Bot health | All |
+
+#### ⚙️ Administration
+
+| Command | Description | Permission |
+|---------|-------------|------------|
+| `/set_channel` | Set SOC channel | Admin |
+| `/forcecheck` | Force scan | Admin |
+| `/post_latest` | Force post | Admin |
+| `/dashboard` | Dashboard link | Admin |
+
+📖 **[Complete Tutorial](./TUTORIAL.md)**
+
+---
+
+### 📚 Complete Documentation
+
+| Document | Description |
+|----------|-------------|
+| 📖 **[README_PT.md](./README_PT.md)** | Complete technical documentation (PT-BR) |
+| 🇺🇸 **[README_EN.md](./README_EN.md)** | English Documentation |
+| 🐳 **[DEPLOY.md](./DEPLOY.md)** | VPS deployment guide |
+| ⚡ **[QUICK_START.md](./QUICK_START.md)** | Quick start guide |
+| 🎮 **[TUTORIAL.md](./TUTORIAL.md)** | Commands tutorial |
+| 🏗️ **[ARCHITECTURE.md](./ARCHITECTURE.md)** | System architecture |
+
+---
+
+## 📜 License
+
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+
+---
+
+<div align="center">
+
+**🔐 Protecting what matters with proactive intelligence**  
+**🔐 Protegendo o que importa com inteligência proativa**
+
+[⬆ Back to top](#-cyberintel-soc-bot)
+
+Made with ❤️ by [Paulo Carminati](https://github.com/carmipa)
+
+</div>
